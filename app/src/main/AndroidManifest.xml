@@ -15,6 +15,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--配置自定义的内容提供器-->
+        <provider
+            android:name=".DatabaseProvider"
+            android:authorities="com.longder.databasetest.provider"
+            android:exported="true" />
     </application>
 
 </manifest>

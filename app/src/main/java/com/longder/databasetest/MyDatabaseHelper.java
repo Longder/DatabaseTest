@@ -32,7 +32,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
     private Context mContext;
 
     /**
-     * 重写父类构造方法
+     * 构造方法中调用父类构造方法
      *
      * @param context
      * @param name    数据库名
@@ -57,10 +57,21 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
         Toast.makeText(mContext, "创建成功", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * 系统发现数据库需要更新时调用的方法
+     *
+     * @param db
+     * @param oldVersion 会传递进来原数据库的版本号
+     * @param newVersion 现在新数据库的版本号
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists Book");
-        db.execSQL("drop table if exists Category");
-        onCreate(db);
+        switch (oldVersion){
+            case 1:
+                db.execSQL(CREATE_CATEGORY);
+                break;
+            default:
+
+        }
     }
 }
