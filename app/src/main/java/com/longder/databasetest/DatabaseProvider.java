@@ -102,7 +102,7 @@ public class DatabaseProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         //获取只读数据库
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         Uri uriReturn = null;
         switch (uriMatcher.match(uri)) {
             case BOOK_DIR:
@@ -112,7 +112,7 @@ public class DatabaseProvider extends ContentProvider {
                 uriReturn = Uri.parse("content://" + AUTHORITY + "/book/" + newBookId);
                 break;
             case CATEGORY_DIR:
-            case CATEGORY_ITEM:
+            case CATEGORY_ITEM://只要是对Category表的插入都执行以下代码
                 long newCategoryId = db.insert("Category", null, values);
                 //将插入之后返回的新数据的id值封装到uri中返回
                 uriReturn = Uri.parse("content://" + AUTHORITY + "/category/" + newCategoryId);
@@ -124,14 +124,14 @@ public class DatabaseProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         //获取只读数据库
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         //删除的行数
         int deleteRows = 0;
         switch (uriMatcher.match(uri)) {
-            case BOOK_ITEM:
+            case BOOK_DIR:
                 deleteRows = db.delete("Book", selection, selectionArgs);
                 break;
-            case BOOK_DIR:
+            case BOOK_ITEM:
                 String bookId = uri.getPathSegments().get(1);
                 deleteRows = db.delete("Book", "id=?", new String[]{bookId});
                 break;
@@ -149,7 +149,7 @@ public class DatabaseProvider extends ContentProvider {
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         //获取只读数据库
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
         //更新的行数
         int updateRows = 0;
         switch (uriMatcher.match(uri)) {
